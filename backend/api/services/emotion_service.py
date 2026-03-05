@@ -27,14 +27,13 @@ try:
         )
         _ffprobe = _ffmpeg.replace("ffmpeg.exe", "ffprobe.exe")
     else:
-        # Linux (Render) — staticffmpeg use karo
+        # Linux (Render) — imageio-ffmpeg use karo
         try:
-            import staticffmpeg
-            staticffmpeg.setup()
-            _ffmpeg  = shutil.which("ffmpeg")  or "ffmpeg"
-            _ffprobe = shutil.which("ffprobe") or "ffprobe"
+            import imageio_ffmpeg
+            _ffmpeg  = imageio_ffmpeg.get_ffmpeg_exe()
+            _ffprobe = _ffmpeg.replace("ffmpeg", "ffprobe")
         except Exception:
-            _ffmpeg  = shutil.which("ffmpeg")  or "ffmpeg"
+            _ffmpeg  = shutil.which("ffmpeg") or "ffmpeg"
             _ffprobe = shutil.which("ffprobe") or "ffprobe"
 
     AudioSegment.converter = _ffmpeg
@@ -45,6 +44,7 @@ try:
 except Exception as _e:
     PYDUB_AVAILABLE = False
     print(f"⚠️  pydub not available: {_e}")
+
 
 # ─────────────────────────────────────────────
 # SECTION 1 — TEXT EMOTION ANALYSIS
