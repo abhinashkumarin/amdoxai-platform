@@ -128,11 +128,12 @@ function ChromeInstallModal({ onClose }) {
           ))}
         </div>
         {/* ✅ UPDATED: GitHub Releases URL */}
-        <a href="https://github.com/abhinashkumarin/amdoxai-platform/releases/latest/download/amdox-extension.zip"
-          target="_blank" rel="noopener noreferrer"
-          style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, width:'100%', padding:'14px', borderRadius:12, background:'linear-gradient(135deg,#00F5FF,#0080FF)', color:'#050B18', fontWeight:800, fontSize:15, textDecoration:'none', marginBottom:12 }}>
-          ⬇️ Download Extension ZIP — Free
-        </a>
+       {/* <a href="https://github.com/abhinashkumarin/amdoxai-platform/releases/download/v1.0.0/amdox-extension.zip" */}
+       <a href="https://github.com/user-attachments/files/25774044/amdox-extension.zip"
+       target="_blank" rel="noopener noreferrer"
+       style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, width:'100%', padding:'14px', borderRadius:12, background:'linear-gradient(135deg,#00F5FF,#0080FF)', color:'#050B18', fontWeight:800, fontSize:15, textDecoration:'none', marginBottom:12 }}>
+      ⬇️ Download Extension ZIP — Free
+   </a>
         <p style={{ color:'#475569', fontSize:11, textAlign:'center', margin:0 }}>Free & Open Source · No Web Store needed · Works offline</p>
       </div>
     </div>
