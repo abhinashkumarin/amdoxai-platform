@@ -87,7 +87,7 @@ function Reveal({ children, delay = 0 }) {
 }
 
 // ════════════════════════════════════════════════
-// NEW: Chrome Install Modal
+// Chrome Install Modal — URL UPDATED to GitHub Releases
 // ════════════════════════════════════════════════
 function ChromeInstallModal({ onClose }) {
   const steps = [
@@ -127,7 +127,9 @@ function ChromeInstallModal({ onClose }) {
             </div>
           ))}
         </div>
-        <a href="https://github.com/abhinashkumarin/amdox-extension/archive/refs/heads/main.zip" target="_blank" rel="noopener noreferrer"
+        {/* ✅ UPDATED: GitHub Releases URL */}
+        <a href="https://github.com/abhinashkumarin/amdoxai-platform/releases/latest/download/amdox-extension.zip"
+          target="_blank" rel="noopener noreferrer"
           style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, width:'100%', padding:'14px', borderRadius:12, background:'linear-gradient(135deg,#00F5FF,#0080FF)', color:'#050B18', fontWeight:800, fontSize:15, textDecoration:'none', marginBottom:12 }}>
           ⬇️ Download Extension ZIP — Free
         </a>
@@ -138,7 +140,7 @@ function ChromeInstallModal({ onClose }) {
 }
 
 // ════════════════════════════════════════════════
-// NEW: Watch Demo Modal
+// Watch Demo Modal
 // ════════════════════════════════════════════════
 function WatchDemoModal({ onClose }) {
   return (
@@ -151,7 +153,6 @@ function WatchDemoModal({ onClose }) {
           </div>
           <button onClick={onClose} style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', color:'#8899aa', width:36, height:36, borderRadius:8, cursor:'pointer', fontSize:18, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
         </div>
-        {/* Video embed — replace VIDEO_ID with your YouTube video ID */}
         <div style={{ width:'100%', aspectRatio:'16/9', background:'rgba(0,0,0,0.5)', borderRadius:14, border:'1px solid rgba(0,245,255,0.15)', overflow:'hidden', marginBottom:20 }}>
           <iframe
             width="100%" height="100%"
@@ -244,10 +245,8 @@ export default function LandingPage() {
     { n: 'Redis', r: 'Pub/Sub', c: '#ff4444' }, { n: 'Chrome MV3', r: 'Extension', c: '#4ade80' },
     { n: 'Vercel', r: 'Deploy-Frontend', c: '#fff' }, { n: 'Render', r: 'Deploy-Backend', c: '#e99012d4' },
     { n: 'Docker', r: 'Container', c: '#2496ed' },
-
   ]
 
-  // NEW: Extension How It Works steps
   const EXT_HOW_STEPS = [
     { icon: '🔽', title: 'Download & Install', desc: 'Click "Add to Chrome — Free" → Download ZIP → Extract folder → chrome://extensions → Developer Mode ON → Load Unpacked → Select folder.', color: '#00F5FF' },
     { icon: '🔐', title: 'Login with Clerk', desc: 'Click extension icon → "Open App to Login" button appears → Sign in via Google/Email on the web app → Extension auto-detects your session.', color: '#a78bfa' },
@@ -559,7 +558,6 @@ export default function LandingPage() {
               </Reveal>
             ))}
             <Reveal delay={0.5}>
-              {/* ✅ FIXED BUTTON — Opens Chrome Install Modal */}
               <button onClick={() => setShowChromeModal(true)}
                 style={{ ...S.btnCyan, marginTop: 8, justifyContent: 'center', width: '100%', padding: '14px', fontSize: 15, fontWeight: 800, borderRadius: 12 }}>
                 🔽 Add to Chrome — Free
@@ -569,7 +567,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* ══ NEW: HOW EXTENSION WORKS — Step by Step ══ */}
+        {/* ══ HOW EXTENSION WORKS — Step by Step ══ */}
         <div style={{ maxWidth: 1100, margin: '72px auto 0' }}>
           <Reveal>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
