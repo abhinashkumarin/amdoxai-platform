@@ -1,4 +1,6 @@
 import uvicorn
+import httpx
+import asyncio
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from api.database import get_db
@@ -84,5 +86,25 @@ async def root():
 async def health():
     return {"status": "ok", "service": "amdox-backend"}
 
+# ── KEEP-ALIVE SCHEDULER (Render free tier sleep prevent) ────────────────────
+BACKEND_URL = os.getenv("BACKEND_URL", "https://amdox-backend.onrender.com")
+
+async def keep_alive_ping():
+    """Ping /health every 10 minutes so Render never sleeps."""
+    await asyncio.sleep(30)                        # wait 30s after startup
+    async with httpx.AsyncClient(timeout=10) as client:
+        while True:
+            try:
+                r = await client.get(f"{BACKEND_URL}/health")
+                print(f"[keep-alive] ping → {r.status_code}")
+            except Exception as e:
+                print(f"[keep-alive] ping failed: {e}")
+            await asyncio.sleep(600)               # ping every 10 minutes
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(keep_alive_ping())
+
+# ── ENTRY POINT ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     uvicorn.run("api.main:app", host="127.0.0.1", port=8000, reload=True)
