@@ -16,19 +16,26 @@ load_dotenv()
 
 # ── FFmpeg path set karo (pydub ke liye) ──────────────────────
 try:
+    import platform
+    import shutil
     from pydub import AudioSegment
 
     if platform.system() == "Windows":
-        # Windows local development
         _ffmpeg = os.getenv(
             "FFMPEG_PATH",
             r"C:\Users\HP\Downloads\ffmpeg-8.0.1-essentials_build\ffmpeg-8.0.1-essentials_build\bin\ffmpeg.exe"
         )
         _ffprobe = _ffmpeg.replace("ffmpeg.exe", "ffprobe.exe")
     else:
-        # Linux (Render server) — ffmpeg system PATH mein hoga
-        _ffmpeg  = shutil.which("ffmpeg")  or "ffmpeg"
-        _ffprobe = shutil.which("ffprobe") or "ffprobe"
+        # Linux (Render) — staticffmpeg use karo
+        try:
+            import staticffmpeg
+            staticffmpeg.setup()
+            _ffmpeg  = shutil.which("ffmpeg")  or "ffmpeg"
+            _ffprobe = shutil.which("ffprobe") or "ffprobe"
+        except Exception:
+            _ffmpeg  = shutil.which("ffmpeg")  or "ffmpeg"
+            _ffprobe = shutil.which("ffprobe") or "ffprobe"
 
     AudioSegment.converter = _ffmpeg
     AudioSegment.ffmpeg    = _ffmpeg
