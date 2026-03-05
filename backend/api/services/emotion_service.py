@@ -64,61 +64,49 @@ STRESS_EMOTIONS = {"Stress", "Sad", "Angry", "Fear", "Disgust"}
 # Keyword maps — English + Hinglish
 EMOTION_KEYWORDS = {
     "Stress": [
-        # English
         "stress", "stressed", "overwhelm", "overwhelmed", "burnout", "burnt out",
         "exhausted", "exhaustion", "pressure", "deadline", "overloaded", "overwork",
         "too much work", "can't cope", "cannot cope", "breakdown", "panic", "panicking",
-        # Hinglish
         "tension", "bahut tension", "bahut pressure", "kaam bahut zyada", "thak gaya",
         "thak gayi", "sar dard", "pagal ho raha", "pagal ho rahi", "dimag kharab",
         "aur nahi ho sakta", "aur nahi ho sakti", "sambhal nahi paa raha",
         "sambhal nahi paa rahi", "zyada pressure", "deadline aa rahi", "mushkil ho raha",
     ],
     "Sad": [
-        # English
         "sad", "unhappy", "depressed", "depression", "lonely", "alone", "hopeless",
         "helpless", "crying", "cried", "miserable", "heartbroken", "down", "low",
         "gloomy", "sorrow", "grief", "disappointed", "disappointment",
-        # Hinglish
         "dukhi", "udaas", "akela", "akeli", "rona aa raha", "nirash", "nirashajanit",
         "toot gaya", "toot gayi", "dil dukha", "bahut bura lag raha", "maza nahi",
         "kuch acha nahi lag raha", "man nahi kar raha",
     ],
     "Angry": [
-        # English
         "angry", "anger", "furious", "frustrated", "frustration", "irritated",
         "irritating", "annoyed", "annoying", "rage", "hate", "hatred", "mad",
         "disgusted", "unfair", "outraged",
-        # Hinglish
         "gussa", "bahut gussa", "chidchida", "naraz", "pareshan", "tang aa gaya",
         "tang aa gayi", "pagal kar diya", "pagal kar di", "galat hai", "ye sahi nahi",
         "galat ho raha", "bahut bura kiya",
     ],
     "Fear": [
-        # English
         "scared", "fear", "afraid", "frightened", "terrified", "anxious", "anxiety",
         "nervous", "worried", "worry", "dread", "panic", "insecure", "insecurity",
         "losing my job", "getting fired", "what if",
-        # Hinglish
         "dar lag raha", "dar lag rahi", "dara hua", "ghabra raha", "ghabra rahi",
         "ghabrahat", "chinta", "bahut chinta", "kya hoga", "job jayegi", "kuch bura hoga",
         "akele dar lag raha", "naukri jayegi",
     ],
     "Happy": [
-        # English
-        "happy", "happiness", "glad", "excited", "excited", "joy", "joyful",
+        "happy", "happiness", "glad", "excited", "joy", "joyful",
         "wonderful", "great", "fantastic", "amazing", "love", "loving", "excellent",
         "awesome", "positive", "energetic", "motivated", "productive", "good mood",
-        # Hinglish
         "khush", "bahut khush", "maza aa raha", "mast", "acha lag raha", "acha lag rahi",
         "sab theek", "sab acha", "productive feel", "energy hai", "motivated hoon",
         "maja aa gaya", "maja aa gayi",
     ],
     "Surprise": [
-        # English
         "surprised", "surprise", "unexpected", "shocking", "shocked", "unbelievable",
         "wow", "omg", "cannot believe", "can't believe",
-        # Hinglish
         "hairan", "achanak", "sochaa nahi tha", "yeh unexpected tha", "kya baat hai",
         "sach mein", "seriously", "believe nahi ho raha",
     ],
@@ -129,7 +117,6 @@ EMOTION_KEYWORDS = {
     ],
 }
 
-# Confidence boosts for multi-keyword matches
 CONFIDENCE_BOOSTS = {
     "Stress":   0.10,
     "Sad":      0.08,
@@ -140,7 +127,6 @@ CONFIDENCE_BOOSTS = {
     "Neutral":  0.04,
 }
 
-# Stress level per emotion
 STRESS_LEVELS = {
     "Stress":   0.90,
     "Fear":     0.80,
@@ -152,7 +138,6 @@ STRESS_LEVELS = {
     "Happy":    0.10,
 }
 
-# Task suggestions per emotion
 TASK_SUGGESTIONS = {
     "Stress":   "🚨 Take a break NOW. HR has been notified. Step away and rest.",
     "Fear":     "🤝 Talk to your team lead. Break your tasks into smaller steps.",
@@ -363,6 +348,15 @@ def _load_voice_model():
         _voice_loaded = False
 
     return _voice_loaded
+
+
+# ── NEW: Public function for startup preload (main.py calls this) ─────────────
+def load_voice_model():
+    """
+    Called from main.py startup_event to preload voice model.
+    Prevents 30-60 second delay on first user request.
+    """
+    return _load_voice_model()
 
 
 SUPERB_EMOTION_MAP = {

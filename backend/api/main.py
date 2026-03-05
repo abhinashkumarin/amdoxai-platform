@@ -21,10 +21,9 @@ app.add_middleware(
         "http://127.0.0.1:3000",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        # ── Production URLs ──
         "https://amdoxai-platform.vercel.app",
-        "https://*.vercel.app",                 # all Vercel preview deployments
-        os.getenv("FRONTEND_URL", ""),          # custom domain via env var
+        "https://*.vercel.app",
+        os.getenv("FRONTEND_URL", ""),
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -81,17 +80,16 @@ async def root():
         "version": "2.0.0"
     }
 
-# ── HEALTH CHECK (for keep-alive ping from frontend) ─────────────────────────
+# ── HEALTH CHECK ──────────────────────────────────────────────────────────────
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "amdox-backend"}
 
-# ── KEEP-ALIVE SCHEDULER (Render free tier sleep prevent) ────────────────────
+# ── KEEP-ALIVE SCHEDULER ──────────────────────────────────────────────────────
 BACKEND_URL = os.getenv("BACKEND_URL", "https://amdox-backend.onrender.com")
 
 async def keep_alive_ping():
-    """Ping /health every 10 minutes so Render never sleeps."""
-    await asyncio.sleep(30)                        # wait 30s after startup
+    await asyncio.sleep(30)
     async with httpx.AsyncClient(timeout=10) as client:
         while True:
             try:
@@ -99,11 +97,27 @@ async def keep_alive_ping():
                 print(f"[keep-alive] ping → {r.status_code}")
             except Exception as e:
                 print(f"[keep-alive] ping failed: {e}")
-            await asyncio.sleep(600)               # ping every 10 minutes
+            await asyncio.sleep(600)
+
+# ── PRELOAD VOICE MODEL AT STARTUP ───────────────────────────────────────────
+async def preload_voice_model():
+    """
+    Server start hone ke 10 second baad voice model load karo.
+    Taaki pehli user request pe delay na ho.
+    """
+    await asyncio.sleep(10)
+    try:
+        print("⏳ Pre-loading voice model at startup...")
+        from api.services.emotion_service import load_voice_model
+        await asyncio.get_event_loop().run_in_executor(None, load_voice_model)
+        print("✅ Voice model pre-loaded successfully!")
+    except Exception as e:
+        print(f"⚠️  Voice model preload failed (will load on first request): {e}")
 
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(keep_alive_ping())
+    asyncio.create_task(preload_voice_model())  # ← NEW: preload voice model
 
 # ── ENTRY POINT ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
