@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amdox AI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 360px;
+      min-height: 520px;
+      background: #050B18;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 13px;
+      overflow-x: hidden;
+    }
+
+    .screen { display: none; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    .header {
+      background: linear-gradient(135deg, #07111F, #0A1628);
+      border-bottom: 1px solid rgba(0,245,255,0.12);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo-icon { font-size: 20px; }
+    .logo-text { font-size: 16px; font-weight: 700; color: #00F5FF; }
+    .logo-sub  { font-size: 10px; color: #475569; letter-spacing: 1px; }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #334155; transition: all 0.3s;
+    }
+    .status-dot.active {
+      background: #00FF88;
+      box-shadow: 0 0 8px #00FF88;
+      animation: pulse 2s infinite;
+    }
+
+    .body { padding: 16px; flex: 1; }
+
+    /* ── CLERK LOGIN SCREEN ── */
+    .clerk-center {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 16px; text-align: center;
+      min-height: 420px;
+    }
+    .clerk-logo { font-size: 48px; margin-bottom: 16px; }
+    .clerk-title {
+      font-size: 20px; font-weight: 700; color: #00F5FF;
+      margin-bottom: 8px;
+    }
+    .clerk-sub {
+      font-size: 12px; color: #475569; margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .clerk-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, #00F5FF, #0080FF);
+      color: #050B18; border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 700; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .clerk-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,245,255,0.3); }
+    .clerk-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .clerk-user-card {
+      background: rgba(0,245,255,0.05);
+      border: 1px solid rgba(0,245,255,0.2);
+      border-radius: 12px; padding: 16px;
+      margin-bottom: 16px; width: 100%;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .clerk-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(0,245,255,0.2);
+      border: 2px solid rgba(0,245,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; overflow: hidden;
+    }
+    .clerk-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .clerk-user-name { font-weight: 600; font-size: 14px; color: #e2e8f0; }
+    .clerk-user-email { font-size: 11px; color: #475569; }
+    .clerk-continue-btn {
+      width: 100%; padding: 12px;
+      background: linear-gradient(135deg, #00F5FF, #0080FF);
+      color: #050B18; border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 700; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 8px;
+    }
+    .clerk-continue-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,245,255,0.3); }
+    .clerk-switch-btn {
+      width: 100%; padding: 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08); color: #64748b;
+      border-radius: 8px; font-size: 11px; cursor: pointer;
+    }
+    .clerk-switch-btn:hover { color: #f87171; border-color: rgba(248,113,113,0.3); }
+
+    .clerk-loading {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: #475569; margin-top: 16px;
+    }
+    .spinner {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(0,245,255,0.2);
+      border-top-color: #00F5FF;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── SESSION SETUP SCREEN ── */
+    .login-title {
+      font-size: 18px; font-weight: 700; color: #00F5FF;
+      text-align: center; margin-bottom: 4px;
+    }
+    .login-sub {
+      font-size: 11px; color: #475569; text-align: center;
+      margin-bottom: 20px; letter-spacing: 1px;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      font-size: 11px; color: #64748b; letter-spacing: 1px;
+      margin-bottom: 6px; display: block;
+    }
+    .form-input, .form-select {
+      width: 100%; padding: 10px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #e2e8f0;
+      font-size: 13px; outline: none;
+      transition: border 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: rgba(0,245,255,0.4);
+    }
+    .form-select option { background: #0A1628; color: #e2e8f0; }
+
+    .auto-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(0,255,136,0.1);
+      border: 1px solid rgba(0,255,136,0.2);
+      border-radius: 20px; padding: 4px 10px;
+      font-size: 10px; color: #00FF88; margin-bottom: 14px;
+    }
+
+    .hms-row { display: flex; gap: 6px; align-items: center; }
+    .hms-input {
+      flex: 1; padding: 10px 4px; text-align: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #00F5FF;
+      font-size: 18px; font-weight: 700; outline: none;
+      -moz-appearance: textfield;
+    }
+    .hms-input::-webkit-outer-spin-button,
+    .hms-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .hms-label { font-size: 10px; color: #475569; min-width: 18px; text-align: center; }
+
+    .quick-btns { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .quick-btn {
+      flex: 1; padding: 6px 4px; border-radius: 6px;
+      background: rgba(0,245,255,0.08);
+      border: 1px solid rgba(0,245,255,0.2);
+      color: #00F5FF; font-size: 10px; cursor: pointer;
+      transition: all 0.2s; font-weight: 600;
+    }
+    .quick-btn:hover { background: rgba(0,245,255,0.15); }
+
+    .submit-btn {
+      width: 100%; padding: 12px;
+      background: linear-gradient(135deg, #00F5FF, #0080FF);
+      color: #050B18; border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 700; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.3s; margin-top: 4px;
+    }
+    .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,245,255,0.3); }
+
+    /* ── MAIN SCREEN ── */
+    .emp-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 12px;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .emp-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(0,245,255,0.15);
+      border: 1px solid rgba(0,245,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; overflow: hidden;
+    }
+    .emp-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .emp-name  { font-weight: 600; font-size: 14px; color: #e2e8f0; }
+    .emp-role  { font-size: 11px; color: #475569; }
+    .logout-btn {
+      margin-left: auto; background: none; border: 1px solid rgba(255,255,255,0.1);
+      color: #475569; padding: 4px 8px; border-radius: 6px;
+      cursor: pointer; font-size: 10px;
+    }
+    .logout-btn:hover { color: #f87171; border-color: #f87171; }
+
+    .toggle-btn {
+      width: 100%; padding: 12px; border-radius: 10px; border: none;
+      cursor: pointer; font-size: 14px; font-weight: 700; letter-spacing: 1px;
+      transition: all 0.3s; display: flex; align-items: center;
+      justify-content: center; gap: 8px; margin-bottom: 16px;
+    }
+    .toggle-btn.start {
+      background: linear-gradient(135deg, #00F5FF, #0080FF);
+      color: #050B18; box-shadow: 0 6px 24px rgba(0,245,255,0.3);
+    }
+    .toggle-btn.stop {
+      background: rgba(248,113,113,0.15);
+      border: 1px solid rgba(248,113,113,0.4); color: #f87171;
+    }
+    .toggle-btn:hover { transform: translateY(-1px); }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px; margin-bottom: 14px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px; padding: 10px 8px; text-align: center;
+    }
+    .stat-value { font-size: 20px; font-weight: 700; color: #00F5FF; }
+    .stat-label { font-size: 10px; color: #475569; letter-spacing: 1px; margin-top: 2px; }
+
+    .emotion-card {
+      border-radius: 10px; padding: 14px; margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+    .emotion-header { font-size: 10px; color: #475569; letter-spacing: 2px; margin-bottom: 10px; }
+    .emotion-main { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .emotion-emoji { font-size: 28px; }
+    .emotion-name  { font-size: 18px; font-weight: 700; }
+    .emotion-sub   { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+    .bar-row { margin-bottom: 8px; }
+    .bar-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; color: #64748b; }
+    .bar-track { background: rgba(255,255,255,0.07); border-radius: 3px; height: 5px; overflow: hidden; }
+    .bar-fill  { height: 100%; border-radius: 3px; transition: width 0.5s; }
+
+    .breakdown { margin-bottom: 14px; }
+    .section-title { font-size: 10px; color: #475569; letter-spacing: 2px; margin-bottom: 10px; }
+    .emo-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .emo-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; min-width: 70px; text-align: center; }
+    .emo-bar-wrap { flex: 1; background: rgba(255,255,255,0.06); border-radius: 3px; height: 6px; }
+    .emo-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+    .emo-pct { font-size: 11px; color: #475569; min-width: 32px; text-align: right; }
+
+    .timeline { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
+    .timeline-item {
+      flex: 1; min-width: 24px; height: 28px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; cursor: default;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .footer { display: flex; gap: 8px; }
+    .foot-btn {
+      flex: 1; padding: 8px; border-radius: 8px; border: none; cursor: pointer;
+      font-size: 11px; font-weight: 600; letter-spacing: 1px; transition: all 0.2s;
+    }
+    .foot-btn.report {
+      background: rgba(0,245,255,0.1);
+      border: 1px solid rgba(0,245,255,0.2); color: #00F5FF;
+    }
+    .foot-btn.open {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1); color: #94a3b8;
+    }
+    .foot-btn:hover { transform: translateY(-1px); }
+
+    .idle-msg { text-align: center; padding: 20px 0; color: #334155; }
+    .idle-msg .big { font-size: 32px; margin-bottom: 8px; }
+    .idle-msg p { font-size: 12px; line-height: 1.6; }
+
+    .work-time {
+      text-align: center; font-size: 11px; color: #475569; margin-bottom: 14px;
+      padding: 6px; background: rgba(255,255,255,0.02);
+      border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .work-timer { display: flex; gap: 6px; margin-bottom: 14px; }
+    .timer-box {
+      flex: 1; text-align: center;
+      background: rgba(0,245,255,0.05);
+      border: 1px solid rgba(0,245,255,0.15);
+      border-radius: 8px; padding: 8px 4px;
+    }
+    .timer-val { font-size: 18px; font-weight: 700; color: #00F5FF; }
+    .timer-lbl { font-size: 9px; color: #475569; letter-spacing: 1px; }
+    .timer-box.done { border-color: rgba(0,255,136,0.3); background: rgba(0,255,136,0.05); }
+    .timer-box.done .timer-val { color: #00FF88; }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SCREEN 0: CLERK LOGIN                     -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="screenClerk" class="screen active">
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">🧠</span>
+        <div>
+          <div class="logo-text">AmdoxAI</div>
+          <div class="logo-sub">SIGN IN</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- State A: Not logged in -->
+      <div id="clerkNotLoggedIn" class="clerk-center">
+        <div class="clerk-logo">🧠</div>
+        <div class="clerk-title">Sign in to AmdoxAI</div>
+        <div class="clerk-sub">Log in via the web app — you'll be<br>automatically signed in here.</div>
+        <button id="clerkOpenAppBtn" class="clerk-btn">
+          🔐 Open App to Login
+        </button>
+        <div class="clerk-loading" id="clerkChecking" style="display:none">
+          <div class="spinner"></div>
+          <span>Checking login status...</span>
+        </div>
+      </div>
+
+      <!-- State B: Logged in — show user info -->
+      <div id="clerkLoggedIn" style="display:none; padding-top: 24px;">
+        <div style="text-align:center; margin-bottom:20px;">
+          <div style="font-size:14px; color:#64748b; margin-bottom:4px;">Signed in as</div>
+        </div>
+        <div class="clerk-user-card">
+          <div class="clerk-avatar" id="clerkAvatarWrap">👤</div>
+          <div>
+            <div class="clerk-user-name" id="clerkUserName">Loading...</div>
+            <div class="clerk-user-email" id="clerkUserEmail">...</div>
+          </div>
+        </div>
+        <button id="clerkContinueBtn" class="clerk-continue-btn">
+          ▶ Continue to Work Session
+        </button>
+        <button id="clerkSwitchBtn" class="clerk-switch-btn">
+          Switch Account
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SCREEN 1: SESSION SETUP (LOGIN)           -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="screenLogin" class="screen">
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">🧠</span>
+        <div>
+          <div class="logo-text">AmdoxAI</div>
+          <div class="logo-sub">EMPLOYEE LOGIN</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="login-title">Welcome Back 👋</div>
+      <div class="login-sub">SETUP YOUR WORK SESSION</div>
+
+      <div class="form-group">
+        <label class="form-label">YOUR NAME</label>
+        <input id="empNameInput" class="form-input" type="text" placeholder="Enter your full name" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">DESIGNATION</label>
+        <select id="empDesignation" class="form-select">
+          <option value="">-- Select Designation --</option>
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Senior Engineer">Senior Engineer</option>
+          <option value="Team Lead">Team Lead</option>
+          <option value="Project Manager">Project Manager</option>
+          <option value="HR Manager">HR Manager</option>
+          <option value="Designer">Designer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="QA Engineer">QA Engineer</option>
+          <option value="DevOps Engineer">DevOps Engineer</option>
+          <option value="Product Manager">Product Manager</option>
+          <option value="Marketing Executive">Marketing Executive</option>
+          <option value="Sales Executive">Sales Executive</option>
+          <option value="Accountant">Accountant</option>
+          <option value="Operations Manager">Operations Manager</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">DATE & TIME (AUTO)</label>
+        <div class="auto-badge">
+          <span>🟢</span> <span id="autoDateTime">Loading...</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">WORK SESSION DURATION</label>
+        <div class="hms-row">
+          <input id="workHrs"  class="hms-input" type="number" min="0" max="14" value="0" />
+          <span class="hms-label">hrs</span>
+          <input id="workMins" class="hms-input" type="number" min="0" max="59" value="0" />
+          <span class="hms-label">min</span>
+          <input id="workSecs" class="hms-input" type="number" min="0" max="59" value="0" />
+          <span class="hms-label">sec</span>
+        </div>
+        <div class="quick-btns">
+          <button class="quick-btn" id="preset30s">⚡ 30s</button>
+          <button class="quick-btn" id="preset1m">🧪 1 min</button>
+          <button class="quick-btn" id="preset5m">🔬 5 min</button>
+          <button class="quick-btn" id="preset8h">💼 8 hrs</button>
+        </div>
+      </div>
+
+      <button id="loginSubmitBtn" class="submit-btn">
+        ▶ START MY WORK SESSION
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SCREEN 2: MAIN MONITORING                 -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="screenMain" class="screen">
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">🧠</span>
+        <div>
+          <div class="logo-text">AmdoxAI</div>
+          <div class="logo-sub">EMOTION MONITOR</div>
+        </div>
+      </div>
+      <div id="statusDot" class="status-dot"></div>
+    </div>
+
+    <div class="body">
+
+      <div class="emp-card">
+        <div class="emp-avatar" id="empAvatarMain">👤</div>
+        <div>
+          <div class="emp-name" id="empNameDisplay">Employee</div>
+          <div class="emp-role" id="empRoleDisplay">Designation</div>
+        </div>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+
+      <div class="work-timer">
+        <div class="timer-box" id="timerHrs">
+          <div class="timer-val" id="timerHrsVal">00</div>
+          <div class="timer-lbl">HRS LEFT</div>
+        </div>
+        <div class="timer-box" id="timerMins">
+          <div class="timer-val" id="timerMinsVal">00</div>
+          <div class="timer-lbl">MIN LEFT</div>
+        </div>
+        <div class="timer-box" id="timerSecs">
+          <div class="timer-val" id="timerSecsVal">00</div>
+          <div class="timer-lbl">SEC LEFT</div>
+        </div>
+      </div>
+
+      <button id="toggleBtn" class="toggle-btn start">
+        ▶ START MONITORING
+      </button>
+
+      <div class="work-time" id="workTime">Not started today</div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalScans">0</div>
+          <div class="stat-label">TOTAL</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="faceScans" style="color:#4ade80">0</div>
+          <div class="stat-label">FACE</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="textScans" style="color:#60a5fa">0</div>
+          <div class="stat-label">TEXT</div>
+        </div>
+      </div>
+
+      <div class="emotion-card" id="emotionCard">
+        <div class="emotion-header">LATEST DETECTION</div>
+        <div id="emotionContent">
+          <div class="idle-msg">
+            <div class="big">🎭</div>
+            <p>Start monitoring to see<br>real-time emotion detection</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown" id="breakdownSection" style="display:none">
+        <div class="section-title">TODAY'S EMOTION BREAKDOWN</div>
+        <div id="breakdownBars"></div>
+      </div>
+
+      <div id="timelineSection" style="display:none; margin-bottom:14px;">
+        <div class="section-title">HOURLY MOOD TIMELINE</div>
+        <div class="timeline" id="timeline"></div>
+      </div>
+
+      <div class="footer">
+        <button id="reportBtn" class="foot-btn report">📧 Send Report</button>
+        <button id="dashboardBtn" class="foot-btn open">📊 Dashboard</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
