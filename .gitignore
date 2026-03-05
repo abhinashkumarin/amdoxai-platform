@@ -24,3 +24,5 @@ frontend/.vite/
 Thumbs.db
 
 supabase_schema.sql
+README.md
+SETUP.md
