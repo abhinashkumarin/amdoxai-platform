@@ -18,3 +18,5 @@ Pillow==10.3.0
 pydantic==2.7.0
 soundfile==0.12.1
 imageio-ffmpeg==0.4.0
+tensorflow==2.15.0
+tf-keras==2.15.0
