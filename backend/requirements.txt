@@ -8,30 +8,18 @@ pydantic==2.7.0
 websockets==12.0
 python-jose==3.3.0
 aiosmtplib==3.0.1
-
-# ── NLP (Text Analysis) ──────────────────────────────────────────
 textblob==0.18.0
-
-# ── Image Processing (Face Analysis) ────────────────────────────
 numpy==1.26.4
 Pillow==10.3.0
 opencv-python-headless==4.8.0.76
-
-# ── DeepFace (lightweight) ───────────────────────────────────────
 deepface==0.0.93
 retina-face==0.0.17
-
-# ── TensorFlow CPU only (saves ~200MB vs full tensorflow) ────────
 tensorflow-cpu==2.15.0
-
-# ── Audio Processing ─────────────────────────────────────────────
+tf-keras==2.15.1
 librosa==0.10.1
 soundfile==0.12.1
 pydub==0.25.1
 imageio-ffmpeg==0.4.9
-
-# ── PyTorch CPU only (saves ~800MB vs CUDA version) ──────────────
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.2.2+cpu
-torchaudio==2.2.2+cpu
 transformers==4.40.0
+torch==2.2.2
+torchaudio==2.2.2
