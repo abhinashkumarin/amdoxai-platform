@@ -99,25 +99,12 @@ async def keep_alive_ping():
                 print(f"[keep-alive] ping failed: {e}")
             await asyncio.sleep(600)
 
-# ── PRELOAD VOICE MODEL AT STARTUP ───────────────────────────────────────────
-async def preload_voice_model():
-    """
-    Server start hone ke 10 second baad voice model load karo.
-    Taaki pehli user request pe delay na ho.
-    """
-    await asyncio.sleep(10)
-    try:
-        print("⏳ Pre-loading voice model at startup...")
-        from api.services.emotion_service import load_voice_model
-        await asyncio.get_event_loop().run_in_executor(None, load_voice_model)
-        print("✅ Voice model pre-loaded successfully!")
-    except Exception as e:
-        print(f"⚠️  Voice model preload failed (will load on first request): {e}")
-
+# ── STARTUP ───────────────────────────────────────────────────────────────────
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(keep_alive_ping())
-    asyncio.create_task(preload_voice_model())  # ← NEW: preload voice model
+    # ✅ Voice model preload REMOVED — load on first request only
+    # RAM save hogi, crash nahi hoga
 
 # ── ENTRY POINT ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
