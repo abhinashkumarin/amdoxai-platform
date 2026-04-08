@@ -998,11 +998,11 @@ Over the past three months, our team built a full-stack AI-powered HR Stress Mon
 This project tackles a real problem — 76% of Indian employees face workplace burnout, and HR teams have no early warning system. We built one.
 
 Huge thanks to **Amdox Technologies** for this incredible opportunity, and to my amazing team:
-- **Abhinash Kumar** (Founder & Lead Engineer)
-- **Nirnay Kumar**
-- **Divyani Singh**
-- **Avinash Kumar**
-- **Sunny/Sonu**
+-  **Nirnay Kumar**
+-  **Avinash Kumar**
+-  **Divyani Singh**
+-  **Ravula Navaneeth** 
+-  **Manthan Soni**
 
 Group 3 | Batch 4.2 | Internship 2026 🎓
 
@@ -1016,11 +1016,11 @@ Group 3 | Batch 4.2 | Internship 2026 🎓
 
 | Name | Role | LinkedIn |
 |------|------|----------|
-| **Abhinash Kumar** | Founder & Lead Full-Stack AI Engineer | [linkedin.com/in/abhinash-kumar-833b82331](https://www.linkedin.com/in/abhinash-kumar-833b82331/) |
-| **Nirnay Kumar** | Full Stack Development | — |
-| **Avinash Kumar** | AI / ML Integration | — |
+| **Avinash Kumar** | Lead Full-Stack AI Engineer & AI / ML Integration  | [linkedin.com/in/abhinash-kumar-833b82331](https://www.linkedin.com/in/abhinash-kumar-833b82331/) |
+| **Nirnay Kumar** | Lead Full Stack Development & AI / ML Integration| — | [linkedin.com/in/nernay-kumar-7578a3155]((https://www.linkedin.com/in/nernay-kumar-7578a3155?utm_source=share_via&utm_content=profile&utm_medium=member_android)) |
 | **Divyani Singh** | Frontend & UI/UX | — |
-| **Sunny / Sonu** | Backend & Testing | — |
+| **Manthan Soni** | Backend & Testing | — |
+| **Ravula Navaneeth** | Backend & Testing | — |
 
 **Group 3 | Batch 4.2 | Amdox Technologies | Three Month Internship 2026**
 
